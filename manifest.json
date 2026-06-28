@@ -1,0 +1,23 @@
+{
+  "name": "DQI — Digital Quality Index",
+  "short_name": "DQI",
+  "description": "Первое AI-приложение, оценивающее качество экранного времени",
+  "start_url": "./app.html",
+  "display": "standalone",
+  "background_color": "#050D1A",
+  "theme_color": "#0066FF",
+  "orientation": "portrait-primary",
+  "lang": "ru",
+  "categories": ["education", "health", "productivity"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

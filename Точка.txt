@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>DQI — Digital Quality Index | Не считай время. Считай развитие.</title>
+<meta name="description" content="Первое AI-приложение, оценивающее качество экранного времени. Важно не сколько, а как вы используете смартфон.">
+<meta name="theme-color" content="#0A1628">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#050D1A;--bg2:#0A1628;--card:rgba(255,255,255,0.04);--glass:rgba(255,255,255,0.08);
+  --p:#0066FF;--pg:rgba(0,102,255,0.35);--a:#00E5FF;--ag:rgba(0,229,255,0.25);
+  --t1:#FFFFFF;--t2:rgba(255,255,255,0.6);--t3:rgba(255,255,255,0.35);
+  --b:rgba(255,255,255,0.08);--bh:rgba(255,255,255,0.2);
+  --gold:#FFD700;--silver:#C0C0C0;--bronze:#CD7F32;
+  --grad:linear-gradient(135deg,#0066FF 0%,#00E5FF 100%);
+  --rs:12px;--rm:20px;--rl:32px;--rxl:48px;
+  --sh:0 8px 32px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.06);
+}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;line-height:1.6;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--p);border-radius:2px}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:68px;padding:0 48px;display:flex;align-items:center;justify-content:space-between;transition:all .4s}
+.nav.scrolled{background:rgba(5,13,26,.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--b)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-box{width:34px;height:34px;background:var(--grad);border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;letter-spacing:-.5px}
+.logo-txt{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;letter-spacing:-.3px}
+.nav-links{display:flex;align-items:center;gap:28px;list-style:none}
+.nav-links a{color:var(--t2);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--t1)}
+.nav-cta{background:var(--grad);color:#fff!important;padding:9px 20px;border-radius:100px;font-weight:600!important;transition:opacity .2s,transform .2s!important}
+.nav-cta:hover{opacity:.88;transform:translateY(-1px)}
+.ham{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.ham span{width:22px;height:2px;background:#fff;border-radius:2px;transition:all .3s;display:block}
+.mob-menu{display:none;position:fixed;top:68px;left:0;right:0;background:rgba(5,13,26,.97);backdrop-filter:blur(20px);padding:24px 32px;border-bottom:1px solid var(--b);z-index:199;flex-direction:column;gap:20px}
+.mob-menu a{color:var(--t2);text-decoration:none;font-size:15px;font-weight:500}
+.mob-menu.open{display:flex}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 40px 80px;overflow:hidden}
+#c{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hero-inner{position:relative;z-index:1;max-width:880px}
+.badge{display:inline-flex;align-items:center;gap:8px;background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--b);border-radius:100px;padding:8px 18px;font-size:13px;font-weight:500;color:var(--a);margin-bottom:28px;animation:fdu .8s ease both}
+.dot{width:6px;height:6px;background:var(--a);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(38px,7vw,80px);font-weight:800;line-height:1.08;letter-spacing:-2.5px;margin-bottom:22px;animation:fdu .8s .15s ease both}
+.gt{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(15px,2.4vw,21px);color:var(--t2);max-width:580px;margin:0 auto 44px;animation:fdu .8s .3s ease both;line-height:1.65}
+.btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;animation:fdu .8s .45s ease both}
+.btn1{display:inline-flex;align-items:center;gap:9px;background:var(--grad);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:15px 30px;border-radius:100px;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 30px rgba(0,102,255,.45)}
+.btn1:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,102,255,.55)}
+.btn2{display:inline-flex;align-items:center;gap:9px;background:var(--glass);backdrop-filter:blur(16px);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:15px 30px;border-radius:100px;border:1px solid var(--b);transition:all .2s}
+.btn2:hover{background:rgba(255,255,255,.12);border-color:var(--bh)}
+.hero-stats{display:flex;gap:44px;justify-content:center;margin-top:68px;animation:fdu .8s .6s ease both;flex-wrap:wrap}
+.hstat-n{font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.hstat-l{font-size:12px;color:var(--t3);margin-top:4px;max-width:150px;text-align:center}
+.scroll-ind{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:1;animation:bounce 2s infinite;opacity:.4}
+.scroll-ind svg{display:block}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* KEYFRAMES */
+@keyframes fdu{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fdd{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cin{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes flipIn{from{opacity:0;transform:perspective(600px) rotateX(25deg) translateY(30px)}to{opacity:1;transform:perspective(600px) rotateX(0deg) translateY(0)}}
+
+/* DIVIDER */
+.div{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--b),transparent)}
+
+/* SECTIONS */
+.sec{padding:110px 40px;max-width:1200px;margin:0 auto}
+.sec-tag{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--a);margin-bottom:18px}
+.sec-h{font-family:'Space Grotesk',sans-serif;font-size:clamp(30px,5vw,54px);font-weight:800;line-height:1.1;letter-spacing:-1.5px;margin-bottom:18px}
+.sec-s{font-size:17px;color:var(--t2);max-width:580px;line-height:1.7}
+.sec-hdr{margin-bottom:64px}
+.sec-hdr.center{text-align:center}.sec-hdr.center .sec-tag{justify-content:center}.sec-hdr.center .sec-s{margin-left:auto;margin-right:auto}
+
+/* PROBLEM GRID */
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.pcard{background:var(--card);border:1px solid var(--b);border-radius:var(--rm);padding:28px 22px;transition:all .3s;opacity:0;transform:translateY(28px);position:relative;overflow:hidden}
+.pcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);transform:scaleX(0);transition:transform .3s}
+.pcard:hover::before{transform:scaleX(1)}
+.pcard.vis{animation:cin .55s ease both}
+.pcard:hover{border-color:var(--bh);transform:translateY(-4px)!important;box-shadow:var(--sh)}
+.pic{width:44px;height:44px;border-radius:12px;background:rgba(0,102,255,.1);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:18px}
+.pnum{font-family:'Space Grotesk',sans-serif;font-size:46px;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.plb{font-size:14px;color:var(--t2);margin-top:8px;line-height:1.5}
+
+/* FLOW */
+.flow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:56px}
+.fstep{background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--b);border-radius:var(--rs);padding:22px 20px;text-align:center;flex:1;min-width:130px;max-width:170px;opacity:0;transform:scale(.92);transition:all .4s}
+.fstep.vis{opacity:1;transform:scale(1)}
+.fstep:hover{border-color:var(--p);box-shadow:0 0 20px rgba(0,102,255,.2);transform:translateY(-4px) scale(1.02)}
+.fi{font-size:26px;margin-bottom:9px}
+.ft{font-size:12px;font-weight:600;line-height:1.4;color:var(--t1)}
+.farr{color:var(--p);font-size:18px;opacity:.6;flex-shrink:0}
+
+/* SCORE CARDS */
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.scard{background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--b);border-radius:var(--rm);padding:28px 20px;text-align:center;transition:all .25s;cursor:default;opacity:0;transform:translateY(22px)}
+.scard.vis{animation:cin .5s ease both}
+.scard:hover{border-color:var(--p);transform:translateY(-6px) scale(1.02)!important;box-shadow:0 20px 60px rgba(0,102,255,.2)}
+.sci{font-size:34px;margin-bottom:14px}
+.scl{font-size:14px;color:var(--t2);margin-bottom:14px;line-height:1.4}
+.scp{font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:800;color:#22C55E}
+.scp span{font-size:18px;opacity:.7}
+
+/* BALANCE */
+.bgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.bcard{background:var(--glass);border:1px solid var(--b);border-radius:var(--rm);padding:28px;opacity:0;transform:translateY(20px)}
+.bcard.vis{animation:cin .6s ease both}
+.blbl{font-size:14px;font-weight:500;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.bpen{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px}
+.bbar{height:8px;background:rgba(255,255,255,.08);border-radius:100px;overflow:hidden}
+.bfill{height:100%;border-radius:100px;width:0;transition:width 1.8s cubic-bezier(.16,1,.3,1)}
+
+/* REPORT */
+.rep-wrap{max-width:680px;margin:0 auto}
+.rep{background:var(--glass);backdrop-filter:blur(28px);border:1px solid var(--b);border-radius:var(--rxl);padding:48px;position:relative;overflow:hidden}
+.rep::after{content:'';position:absolute;top:-50%;right:-20%;width:380px;height:380px;background:radial-gradient(circle,rgba(0,102,255,.15),transparent);pointer-events:none}
+.ring-wrap{width:156px;height:156px;margin:0 auto 28px;position:relative}
+.ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+circle.rbg{fill:none;stroke:rgba(255,255,255,.07);stroke-width:10}
+circle.rfill{fill:none;stroke:url(#sg);stroke-width:10;stroke-linecap:round;stroke-dasharray:408;stroke-dashoffset:408;transition:stroke-dashoffset 2.2s cubic-bezier(.16,1,.3,1)}
+.ring-txt{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.ring-n{font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.ring-l{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px}
+.rep-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.ritem{text-align:center;padding:18px;background:rgba(255,255,255,.04);border-radius:var(--rs);border:1px solid var(--b)}
+.ric{font-size:22px;margin-bottom:7px}
+.riv{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700}
+.ril{font-size:11px;color:var(--t3);margin-top:3px}
+
+/* PROGRESS */
+.prog-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.prc{background:var(--glass);border:1px solid var(--b);border-radius:var(--rm);padding:28px;opacity:0;transform:translateY(20px)}
+.prc.vis{animation:cin .6s ease both}
+.prh{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.prht{font-size:16px;font-weight:600}
+.prbadge{background:rgba(34,197,94,.2);color:#22C55E;border-radius:100px;padding:3px 11px;font-size:12px;font-weight:700}
+.prbar-item{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.prbar-lbl{font-size:12px;color:var(--t2);width:80px;flex-shrink:0}
+.prbar-track{flex:1;height:6px;background:rgba(255,255,255,.07);border-radius:100px;overflow:hidden}
+.prbar-fill{height:100%;border-radius:100px;background:var(--grad);width:0;transition:width 1.8s cubic-bezier(.16,1,.3,1)}
+.prbar-val{font-size:12px;font-weight:600;width:44px;text-align:right}
+
+/* TIERS */
+.tgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.tc{border-radius:var(--rm);padding:28px 12px;text-align:center;border:1px solid var(--b);transition:all .3s;opacity:0;transform:translateY(20px) scale(.95);cursor:default}
+.tc.vis{animation:cin .6s ease both}
+.tc:hover{transform:translateY(-8px) scale(1.04)!important}
+.tc-bronze{background:linear-gradient(135deg,rgba(205,127,50,.15),rgba(205,127,50,.04))}
+.tc-silver{background:linear-gradient(135deg,rgba(192,192,192,.15),rgba(192,192,192,.04))}
+.tc-gold{background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,215,0,.04))}
+.tc-plat{background:linear-gradient(135deg,rgba(229,228,226,.15),rgba(229,228,226,.04))}
+.tc-dia{background:linear-gradient(135deg,rgba(185,242,255,.18),rgba(0,229,255,.04))}
+.tic{font-size:38px;margin-bottom:10px}
+.tnm{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;margin-bottom:6px}
+.tsc{font-size:11px;color:var(--t3);margin-bottom:8px}
+.tdc{font-size:11px;color:var(--t2);line-height:1.5}
+
+/* AUDIENCE */
+.agrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.ac{background:var(--glass);border:1px solid var(--b);border-radius:var(--rl);padding:38px 28px;transition:all .3s;opacity:0;transform:translateY(24px)}
+.ac.vis{animation:cin .6s ease both}
+.ac:hover{border-color:var(--p);transform:translateY(-5px)!important;box-shadow:0 24px 60px rgba(0,102,255,.15)}
+.ac-ic{font-size:44px;margin-bottom:20px;display:block}
+.ac-h{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;margin-bottom:14px}
+.ac-p{font-size:14px;color:var(--t2);line-height:1.7}
+.ac-ul{list-style:none;margin-top:20px;display:flex;flex-direction:column;gap:10px}
+.ac-ul li{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--t2)}
+.ac-ul li::before{content:'✓';color:var(--a);font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* FAQ */
+.faq-wrap{max-width:780px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--b)}
+.faq-q{width:100%;background:none;border:none;padding:22px 0;display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-align:left;color:var(--t1);font-size:15px;font-weight:500;font-family:'Inter',sans-serif;gap:14px}
+.faq-ic{width:26px;height:26px;border-radius:50%;border:1px solid var(--b);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s;font-size:16px;line-height:1}
+.faq-item.open .faq-ic{background:var(--p);border-color:var(--p);transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1)}
+.faq-ai{padding:0 0 20px;font-size:14px;color:var(--t2);line-height:1.75}
+
+/* CTA */
+.cta-box{background:linear-gradient(135deg,rgba(0,102,255,.14),rgba(0,229,255,.07));border:1px solid rgba(0,102,255,.3);border-radius:var(--rxl);padding:80px 60px;text-align:center;position:relative;overflow:hidden}
+.cta-box::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:580px;height:580px;background:radial-gradient(circle,rgba(0,102,255,.09),transparent);pointer-events:none}
+.cta-h{font-family:'Space Grotesk',sans-serif;font-size:clamp(30px,5vw,54px);font-weight:800;letter-spacing:-1.5px;margin-bottom:18px;position:relative}
+.cta-s{font-size:17px;color:var(--t2);margin-bottom:44px;max-width:480px;margin-left:auto;margin-right:auto}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative}
+.store-btn{display:inline-flex;align-items:center;gap:12px;padding:15px 26px;background:rgba(255,255,255,.07);border:1px solid var(--b);border-radius:var(--rs);text-decoration:none;color:#fff;transition:all .3s;backdrop-filter:blur(16px)}
+.store-btn:hover{background:rgba(255,255,255,.13);border-color:var(--bh);transform:translateY(-2px)}
+.sbi{font-size:26px}
+.sbt{text-align:left}
+.sbts{font-size:10px;color:var(--t3)}
+.sbtb{font-size:16px;font-weight:700}
+
+/* FOOTER */
+.footer{padding:72px 40px 36px;border-top:1px solid var(--b)}
+.footer-g{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:56px;margin-bottom:56px}
+.footer-desc{font-size:13px;color:var(--t2);margin-top:14px;max-width:270px;line-height:1.7}
+.social-row{display:flex;gap:10px;margin-top:22px}
+.sl{width:34px;height:34px;border-radius:50%;border:1px solid var(--b);display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:14px;transition:all .2s}
+.sl:hover{background:var(--p);border-color:var(--p)}
+.fc h4{font-size:13px;font-weight:600;margin-bottom:18px;color:var(--t1)}
+.fc ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+.fc ul li a{text-decoration:none;font-size:13px;color:var(--t3);transition:color .2s}
+.fc ul li a:hover{color:var(--t1)}
+.footer-bot{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding-top:28px;border-top:1px solid var(--b);font-size:12px;color:var(--t3)}
+
+/* 3D SCENE TRANSITIONS */
+.scene{perspective:1400px;overflow:hidden}
+.scene-inner{opacity:0;transform:perspective(1000px) rotateX(18deg) translateY(40px);transition:opacity .9s ease,transform .9s cubic-bezier(.16,1,.3,1)}
+.scene-inner.vis{opacity:1;transform:perspective(1000px) rotateX(0deg) translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .pgrid{grid-template-columns:repeat(2,1fr)}
+  .sgrid{grid-template-columns:repeat(2,1fr)}
+  .tgrid{grid-template-columns:repeat(3,1fr)}
+  .agrid{grid-template-columns:1fr}
+  .footer-g{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .nav{padding:0 20px}
+  .nav-links{display:none}
+  .ham{display:flex}
+  .sec{padding:72px 20px}
+  .hero{padding:96px 20px 60px}
+  .hero-stats{gap:22px}
+  .pgrid,.sgrid{grid-template-columns:1fr}
+  .bgrid{grid-template-columns:1fr}
+  .prog-grid{grid-template-columns:1fr}
+  .tgrid{grid-template-columns:repeat(2,1fr)}
+  .rep-row{grid-template-columns:1fr}
+  .cta-box{padding:44px 22px}
+  .footer-g{grid-template-columns:1fr;gap:36px}
+  .footer{padding:56px 20px 28px}
+  .footer-bot{flex-direction:column;gap:12px;text-align:center}
+}
+@media(max-width:480px){
+  .h1{letter-spacing:-1.5px}
+  .tgrid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a href="index.html" class="logo">
+    <div class="logo-box">DQI</div>
+    <span class="logo-txt">Digital Quality Index</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#problem">Проблема</a></li>
+    <li><a href="#solution">Решение</a></li>
+    <li><a href="#scores">Баллы</a></li>
+    <li><a href="#tiers">Ранги</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="app.html" class="nav-cta">Скачать</a></li>
+  </ul>
+  <button class="ham" id="ham" onclick="toggleMenu()" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mob-menu" id="mob">
+  <a href="#problem" onclick="closeMenu()">Проблема</a>
+  <a href="#solution" onclick="closeMenu()">Решение</a>
+  <a href="#scores" onclick="closeMenu()">Система баллов</a>
+  <a href="#tiers" onclick="closeMenu()">Ранги</a>
+  <a href="#faq" onclick="closeMenu()">FAQ</a>
+  <a href="app.html" style="color:var(--a);font-weight:600">⬇ Скачать приложение</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <canvas id="c"></canvas>
+  <div class="hero-inner">
+    <div class="badge"><div class="dot"></div>AI-индекс качества цифровой жизни — 2026</div>
+    <h1 class="h1">Телефон не должен<br><span class="gt">управлять вашей жизнью</span></h1>
+    <p class="hero-sub">Важно не сколько времени ты провёл в телефоне.<br>Важно <strong>что ты сделал</strong> за это время.</p>
+    <div class="btns">
+      <a href="app.html" class="btn1">⬇ Скачать приложение</a>
+      <a href="#solution" class="btn2">Узнать больше →</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hstat-n" data-cnt="7.5" data-dec="1">0</div>
+        <div class="hstat-l">часов в день средний пользователь смартфона</div>
+      </div>
+      <div>
+        <div class="hstat-n" data-cnt="74" data-dec="0">0</div>
+        <div class="hstat-l">% молодёжи имеют признаки цифровой зависимости</div>
+      </div>
+      <div>
+        <div class="hstat-n" data-cnt="8" data-dec="0">0</div>
+        <div class="hstat-l">секунд — средняя концентрация внимания в 2025 г.</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-ind">
+    <svg width="24" height="24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- PROBLEM -->
+<section class="sec" id="problem">
+  <div class="sec-hdr">
+    <div class="sec-tag">📊 Проблема</div>
+    <h2 class="sec-h">Цифровая зависимость —<br><span class="gt">эпидемия нашего времени</span></h2>
+    <p class="sec-s">Современное поколение платит высокую цену за неограниченный доступ к экрану. Данные говорят сами за себя.</p>
+  </div>
+  <div class="pgrid">
+    <div class="pcard"><div class="pic">👁️</div><div class="pnum">87%</div><div class="plb">подростков жалуются на ухудшение зрения от экранов</div></div>
+    <div class="pcard"><div class="pic">🧠</div><div class="pnum">64%</div><div class="plb">снижение концентрации внимания за последние 10 лет</div></div>
+    <div class="pcard"><div class="pic">📱</div><div class="pnum">4.3ч</div><div class="plb">среднесуточное время в TikTok и Reels среди молодёжи</div></div>
+    <div class="pcard"><div class="pic">💬</div><div class="pnum">−40%</div><div class="plb">снижение навыков живого общения у Gen Z</div></div>
+    <div class="pcard"><div class="pic">😰</div><div class="pnum">2.4×</div><div class="plb">рост тревожности и депрессии у цифрового поколения</div></div>
+    <div class="pcard"><div class="pic">📚</div><div class="pnum">73%</div><div class="plb">студентов читают книги менее 30 минут в день</div></div>
+    <div class="pcard"><div class="pic">🎯</div><div class="pnum">8 сек</div><div class="plb">средняя продолжительность концентрации внимания (2025)</div></div>
+    <div class="pcard"><div class="pic">💸</div><div class="pnum">$220B</div><div class="plb">глобальный экономический ущерб от цифровой зависимости</div></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- SOLUTION -->
+<section class="sec" id="solution">
+  <div class="sec-hdr">
+    <div class="sec-tag">💡 Решение</div>
+    <h2 class="sec-h">Не запрет.<br><span class="gt">Качество использования.</span></h2>
+    <p class="sec-s">DQI не ограничивает ваш телефон. Мы оцениваем ценность каждой минуты и помогаем расти.</p>
+  </div>
+  <div class="flow">
+    <div class="fstep"><div class="fi">📱</div><div class="ft">Используешь телефон</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="fi">🤖</div><div class="ft">AI анализирует активность</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="fi">⚡</div><div class="ft">Оценка каждого действия</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="fi">📊</div><div class="ft">Формируется DQI Score</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="fi">🎯</div><div class="ft">Персональные рекомендации</div></div>
+  </div>
+  <!-- AI CATEGORIES -->
+  <div style="margin-top:56px;background:var(--glass);border:1px solid var(--b);border-radius:var(--rl);padding:40px">
+    <div class="sec-tag" style="margin-bottom:16px">🤖 AI анализирует</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px" id="aiCats">
+      <div style="background:rgba(0,102,255,.08);border:1px solid rgba(0,102,255,.2);border-radius:var(--rs);padding:16px 14px;text-align:center">
+        <div style="font-size:24px;margin-bottom:8px">🎓</div>
+        <div style="font-size:13px;font-weight:600">Обучение</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:4px">курсы, лекции</div>
+      </div>
+      <div style="background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.15);border-radius:var(--rs);padding:16px 14px;text-align:center">
+        <div style="font-size:24px;margin-bottom:8px">📖</div>
+        <div style="font-size:13px;font-weight:600">Чтение</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:4px">книги, статьи</div>
+      </div>
+      <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:var(--rs);padding:16px 14px;text-align:center">
+        <div style="font-size:24px;margin-bottom:8px">🌍</div>
+        <div style="font-size:13px;font-weight:600">Языки</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:4px">Duolingo, уроки</div>
+      </div>
+      <div style="background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.15);border-radius:var(--rs);padding:16px 14px;text-align:center">
+        <div style="font-size:24px;margin-bottom:8px">💻</div>
+        <div style="font-size:13px;font-weight:600">Разработка</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:4px">код, проекты</div>
+      </div>
+      <div style="background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.15);border-radius:var(--rs);padding:16px 14px;text-align:center">
+        <div style="font-size:24px;margin-bottom:8px">🔬</div>
+        <div style="font-size:13px;font-weight:600">Наука</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:4px">документальное</div>
+      </div>
+      <div style="background:rgba(244,63,94,.06);border:1px solid rgba(244,63,94,.15);border-radius:var(--rs);padding:16px 14px;text-align:center">
+        <div style="font-size:24px;margin-bottom:8px">🤝</div>
+        <div style="font-size:13px;font-weight:600">Коммуникация</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:4px">полезное общение</div>
+      </div>
+      <div style="background:rgba(234,179,8,.06);border:1px solid rgba(234,179,8,.15);border-radius:var(--rs);padding:16px 14px;text-align:center">
+        <div style="font-size:24px;margin-bottom:8px">🎨</div>
+        <div style="font-size:13px;font-weight:600">Творчество</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:4px">дизайн, создание</div>
+      </div>
+      <div style="background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.15);border-radius:var(--rs);padding:16px 14px;text-align:center">
+        <div style="font-size:24px;margin-bottom:8px">🎮</div>
+        <div style="font-size:13px;font-weight:600">Развлечения</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:4px">баланс важен</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- SCORES -->
+<section class="sec" id="scores">
+  <div class="sec-hdr">
+    <div class="sec-tag">⭐ Система баллов</div>
+    <h2 class="sec-h">Зарабатывай<br><span class="gt">каждую минуту</span></h2>
+    <p class="sec-s">Каждое полезное действие в телефоне добавляет очки к твоему DQI. Начни прямо сейчас.</p>
+  </div>
+  <div class="sgrid">
+    <div class="scard"><div class="sci">🌍</div><div class="scl">Изучение иностранного языка</div><div class="scp"><span>+</span>20</div></div>
+    <div class="scard"><div class="sci">📖</div><div class="scl">Чтение книги или статьи</div><div class="scp"><span>+</span>30</div></div>
+    <div class="scard"><div class="sci">🎓</div><div class="scl">Онлайн-курс или лекция</div><div class="scp"><span>+</span>40</div></div>
+    <div class="scard"><div class="sci">🔬</div><div class="scl">Научный или образовательный контент</div><div class="scp"><span>+</span>25</div></div>
+    <div class="scard"><div class="sci">💻</div><div class="scl">Программирование и проекты</div><div class="scp"><span>+</span>35</div></div>
+    <div class="scard"><div class="sci">🎨</div><div class="scl">Творческие и дизайн-проекты</div><div class="scp"><span>+</span>20</div></div>
+    <div class="scard"><div class="sci">🤝</div><div class="scl">Продуктивная коммуникация</div><div class="scp"><span>+</span>15</div></div>
+    <div class="scard"><div class="sci">📰</div><div class="scl">Качественные новости и аналитика</div><div class="scp"><span>+</span>10</div></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- BALANCE -->
+<section class="sec">
+  <div class="sec-hdr">
+    <div class="sec-tag">⚖️ Баланс развлечений</div>
+    <h2 class="sec-h">Развлечения — это нормально.<br><span class="gt">Главное — баланс.</span></h2>
+    <p class="sec-s">DQI не против TikTok и Reels. Мы помогаем найти здоровый баланс между пользой и отдыхом.</p>
+  </div>
+  <div class="bgrid">
+    <div class="bcard">
+      <div class="blbl"><span>До 1 часа TikTok/Reels</span><span class="bpen" style="color:#22C55E">0 штрафов ✓</span></div>
+      <div class="bbar"><div class="bfill" style="background:linear-gradient(90deg,#22C55E,#4ADE80)" data-w="20%"></div></div>
+    </div>
+    <div class="bcard">
+      <div class="blbl"><span>1–2 часа TikTok/Reels</span><span class="bpen" style="color:#EAB308">–10 баллов</span></div>
+      <div class="bbar"><div class="bfill" style="background:linear-gradient(90deg,#EAB308,#FDE047)" data-w="45%"></div></div>
+    </div>
+    <div class="bcard">
+      <div class="blbl"><span>2–3 часа TikTok/Reels</span><span class="bpen" style="color:#F97316">–25 баллов</span></div>
+      <div class="bbar"><div class="bfill" style="background:linear-gradient(90deg,#F97316,#FB923C)" data-w="67%"></div></div>
+    </div>
+    <div class="bcard">
+      <div class="blbl"><span>4+ часов TikTok/Reels</span><span class="bpen" style="color:#EF4444">–60 баллов</span></div>
+      <div class="bbar"><div class="bfill" style="background:linear-gradient(90deg,#EF4444,#F87171)" data-w="100%"></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- REPORT -->
+<section class="sec">
+  <div class="sec-hdr center">
+    <div class="sec-tag">📈 AI-отчёт</div>
+    <h2 class="sec-h">Ваш персональный<br><span class="gt">DQI Dashboard</span></h2>
+    <p class="sec-s">Умный AI формирует еженедельный отчёт о качестве вашей цифровой жизни.</p>
+  </div>
+  <div class="rep-wrap">
+    <div class="rep" id="rep">
+      <svg width="0" height="0" style="position:absolute">
+        <defs>
+          <linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#0066FF"/>
+            <stop offset="100%" stop-color="#00E5FF"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="ring-wrap" id="ring">
+        <svg viewBox="0 0 140 140">
+          <circle class="rbg" cx="70" cy="70" r="60"/>
+          <circle class="rfill" id="rfill" cx="70" cy="70" r="60"/>
+        </svg>
+        <div class="ring-txt">
+          <div class="ring-n" id="ringN">71</div>
+          <div class="ring-l">DQI Score</div>
+        </div>
+      </div>
+      <div style="text-align:center;color:var(--t2);font-size:14px;margin-bottom:8px">Отлично! Ваш цифровой индекс выше среднего 🚀</div>
+      <div class="rep-row">
+        <div class="ritem"><div class="ric">📚</div><div class="riv">18ч</div><div class="ril">Обучение</div></div>
+        <div class="ritem"><div class="ric">💬</div><div class="riv">12ч</div><div class="ril">Общение</div></div>
+        <div class="ritem"><div class="ric">🎮</div><div class="riv">12ч</div><div class="ril">Развлечения</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- PROGRESS -->
+<section class="sec">
+  <div class="sec-hdr">
+    <div class="sec-tag">📉 Личный прогресс</div>
+    <h2 class="sec-h">Сравни себя<br><span class="gt">с собой вчерашним</span></h2>
+    <p class="sec-s">Никаких рейтингов против других людей. Только ваш личный рост — месяц за месяцем.</p>
+  </div>
+  <div class="prog-grid">
+    <div class="prc">
+      <div class="prh"><span class="prht">🌍 Английский язык</span><span class="prbadge">+58%</span></div>
+      <div class="prbar-item">
+        <span class="prbar-lbl">Прошлый мес.</span>
+        <div class="prbar-track"><div class="prbar-fill" data-w="60%"></div></div>
+        <span class="prbar-val" style="color:var(--t2)">12ч</span>
+      </div>
+      <div class="prbar-item">
+        <span class="prbar-lbl">Этот месяц</span>
+        <div class="prbar-track"><div class="prbar-fill" data-w="95%"></div></div>
+        <span class="prbar-val" style="color:#22C55E">19ч</span>
+      </div>
+    </div>
+    <div class="prc">
+      <div class="prh"><span class="prht">📚 Чтение книг</span><span class="prbadge">+120%</span></div>
+      <div class="prbar-item">
+        <span class="prbar-lbl">Прошлый мес.</span>
+        <div class="prbar-track"><div class="prbar-fill" data-w="23%"></div></div>
+        <span class="prbar-val" style="color:var(--t2)">5ч</span>
+      </div>
+      <div class="prbar-item">
+        <span class="prbar-lbl">Этот месяц</span>
+        <div class="prbar-track"><div class="prbar-fill" data-w="50%"></div></div>
+        <span class="prbar-val" style="color:#22C55E">11ч</span>
+      </div>
+    </div>
+    <div class="prc">
+      <div class="prh"><span class="prht">🎓 Онлайн-курсы</span><span class="prbadge">+85%</span></div>
+      <div class="prbar-item">
+        <span class="prbar-lbl">Прошлый мес.</span>
+        <div class="prbar-track"><div class="prbar-fill" data-w="27%"></div></div>
+        <span class="prbar-val" style="color:var(--t2)">8ч</span>
+      </div>
+      <div class="prbar-item">
+        <span class="prbar-lbl">Этот месяц</span>
+        <div class="prbar-track"><div class="prbar-fill" data-w="50%"></div></div>
+        <span class="prbar-val" style="color:#22C55E">14.8ч</span>
+      </div>
+    </div>
+    <div class="prc">
+      <div class="prh"><span class="prht">💻 Программирование</span><span class="prbadge">+43%</span></div>
+      <div class="prbar-item">
+        <span class="prbar-lbl">Прошлый мес.</span>
+        <div class="prbar-track"><div class="prbar-fill" data-w="42%"></div></div>
+        <span class="prbar-val" style="color:var(--t2)">21ч</span>
+      </div>
+      <div class="prbar-item">
+        <span class="prbar-lbl">Этот месяц</span>
+        <div class="prbar-track"><div class="prbar-fill" data-w="60%"></div></div>
+        <span class="prbar-val" style="color:#22C55E">30ч</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- TIERS -->
+<section class="sec" id="tiers">
+  <div class="sec-hdr">
+    <div class="sec-tag">🏆 Ранги достижений</div>
+    <h2 class="sec-h">Твой DQI — <span class="gt">твой статус</span></h2>
+    <p class="sec-s">Университеты, работодатели и государственные программы признают твой DQI-ранг как реальное достижение.</p>
+  </div>
+  <div class="tgrid">
+    <div class="tc tc-bronze">
+      <div class="tic">🥉</div>
+      <div class="tnm" style="color:var(--bronze)">Bronze</div>
+      <div class="tsc">DQI 40–59</div>
+      <div class="tdc">Начало пути. Базовые программы.</div>
+    </div>
+    <div class="tc tc-silver">
+      <div class="tic">🥈</div>
+      <div class="tnm" style="color:var(--silver)">Silver</div>
+      <div class="tsc">DQI 60–74</div>
+      <div class="tdc">Уверенный рост. Стипендиальные программы.</div>
+    </div>
+    <div class="tc tc-gold">
+      <div class="tic">🥇</div>
+      <div class="tnm" style="color:var(--gold)">Gold</div>
+      <div class="tsc">DQI 75–84</div>
+      <div class="tdc">Высокая цифровая культура. Приоритет в стажировках.</div>
+    </div>
+    <div class="tc tc-plat">
+      <div class="tic">💎</div>
+      <div class="tnm" style="color:#E5E4E2">Platinum</div>
+      <div class="tsc">DQI 85–94</div>
+      <div class="tdc">Элита. Гранты и международные программы.</div>
+    </div>
+    <div class="tc tc-dia">
+      <div class="tic">🔷</div>
+      <div class="tnm" style="color:#B9F2FF">Diamond</div>
+      <div class="tsc">DQI 95–100</div>
+      <div class="tdc">Цифровой лидер. Эксклюзивные возможности.</div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- AUDIENCE -->
+<section class="sec">
+  <div class="sec-hdr">
+    <div class="sec-tag">🤝 Для кого</div>
+    <h2 class="sec-h">Партнёры<br><span class="gt">цифрового будущего</span></h2>
+    <p class="sec-s">DQI создаёт ценность для каждого участника образовательной и социальной экосистемы.</p>
+  </div>
+  <div class="agrid">
+    <div class="ac">
+      <span class="ac-ic">👨‍👩‍👧</span>
+      <div class="ac-h">Для родителей</div>
+      <p class="ac-p">Не контроль — а развитие. Наблюдайте за цифровым ростом вашего ребёнка, а не за тем, сколько он сидит в телефоне.</p>
+      <ul class="ac-ul">
+        <li>Еженедельные отчёты о прогрессе ребёнка</li>
+        <li>Уведомления о достижениях и новых уровнях</li>
+        <li>AI-рекомендации по развитию</li>
+        <li>Родительский Dashboard без слежки</li>
+        <li>Семейные челленджи и цели</li>
+      </ul>
+    </div>
+    <div class="ac">
+      <span class="ac-ic">🎓</span>
+      <div class="ac-h">Для университетов</div>
+      <p class="ac-p">Новый критерий оценки цифровой зрелости студентов. Интеграция в систему академических достижений и рейтингов.</p>
+      <ul class="ac-ul">
+        <li>Аналитика по всему учебному заведению</li>
+        <li>Интеграция с LMS (Moodle, Canvas, Blackboard)</li>
+        <li>Сертификаты цифровой компетентности</li>
+        <li>Стипендиальные программы для топ-студентов</li>
+        <li>Конкурсы и форумы с международным участием</li>
+      </ul>
+    </div>
+    <div class="ac">
+      <span class="ac-ic">🏛️</span>
+      <div class="ac-h">Для государства</div>
+      <p class="ac-p">Инструмент государственной политики в сфере цифрового образования, здоровья и развития молодёжи Узбекистана.</p>
+      <ul class="ac-ul">
+        <li>Национальная статистика цифровой культуры</li>
+        <li>Оценка эффективности образовательных программ</li>
+        <li>Платформа для молодёжной цифровой политики</li>
+        <li>Данные для принятия государственных решений</li>
+        <li>Масштабирование на весь Центральный Азиатский регион</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="sec-hdr center">
+    <div class="sec-tag">❓ FAQ</div>
+    <h2 class="sec-h">Часто задаваемые<br><span class="gt">вопросы</span></h2>
+  </div>
+  <div class="faq-wrap" id="faqWrap"></div>
+</section>
+
+<div class="div"></div>
+
+<!-- CTA -->
+<section class="sec">
+  <div class="cta-box">
+    <h2 class="cta-h">Начни считать<br><span class="gt">развитие сегодня</span></h2>
+    <p class="cta-s">Скачай DQI и узнай, насколько качественно ты используешь своё экранное время. Бесплатно.</p>
+    <div class="cta-btns">
+      <a href="app.html" class="store-btn">
+        <span class="sbi">📱</span>
+        <div class="sbt"><div class="sbts">Установить как</div><div class="sbtb">PWA App (iOS &amp; Android)</div></div>
+      </a>
+      <a href="https://github.com" class="store-btn" id="ghLink" target="_blank" rel="noopener">
+        <span class="sbi">🐙</span>
+        <div class="sbt"><div class="sbts">Исходный код на</div><div class="sbtb">GitHub</div></div>
+      </a>
+      <a href="app.html#partner" class="store-btn">
+        <span class="sbi">🤝</span>
+        <div class="sbt"><div class="sbts">Стать</div><div class="sbtb">Партнёром</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-g">
+    <div>
+      <div class="logo" style="display:inline-flex">
+        <div class="logo-box">DQI</div>
+        <span class="logo-txt">Digital Quality Index</span>
+      </div>
+      <p class="footer-desc">Первый AI-индекс качества использования смартфона. Не считай время — считай развитие. Сделано в Узбекистане 🇺🇿</p>
+      <div class="social-row">
+        <a href="#" class="sl">𝕏</a>
+        <a href="#" class="sl">📸</a>
+        <a href="#" class="sl">💼</a>
+        <a href="#" class="sl">📱</a>
+        <a href="#" class="sl">🐙</a>
+      </div>
+    </div>
+    <div class="fc">
+      <h4>Продукт</h4>
+      <ul>
+        <li><a href="#solution">Как работает</a></li>
+        <li><a href="#scores">Система баллов</a></li>
+        <li><a href="#tiers">Ранги DQI</a></li>
+        <li><a href="app.html">Приложение</a></li>
+      </ul>
+    </div>
+    <div class="fc">
+      <h4>Партнёры</h4>
+      <ul>
+        <li><a href="#">Для университетов</a></li>
+        <li><a href="#">Для школ</a></li>
+        <li><a href="#">Для государства</a></li>
+        <li><a href="#">Для компаний</a></li>
+      </ul>
+    </div>
+    <div class="fc">
+      <h4>Компания</h4>
+      <ul>
+        <li><a href="#">О проекте</a></li>
+        <li><a href="#">Команда</a></li>
+        <li><a href="#">Блог</a></li>
+        <li><a href="#">Контакты</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bot">
+    <span>© 2026 Digital Quality Index. Все права защищены.</span>
+    <span>Сделано в Ташкенте, Узбекистан 🇺🇿 для всего мира</span>
+  </div>
+</footer>
+
+<script>
+/* ===== NAVBAR ===== */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+});
+
+function toggleMenu() {
+  document.getElementById('mob').classList.toggle('open');
+}
+function closeMenu() {
+  document.getElementById('mob').classList.remove('open');
+}
+
+/* ===== CANVAS HERO ===== */
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W, H;
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+const N = 90;
+const pts = Array.from({length: N}, () => ({
+  x: Math.random() * W, y: Math.random() * H,
+  vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35,
+  r: Math.random() * 1.8 + .4,
+  op: Math.random() * .45 + .1,
+  col: Math.random() > .5 ? '0,102,255' : '0,229,255'
+}));
+
+let mouseX = W / 2, mouseY = H / 2;
+document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+
+function frame() {
+  ctx.clearRect(0, 0, W, H);
+  // radial glow
+  const g = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, W * .7);
+  g.addColorStop(0, 'rgba(0,40,100,.22)');
+  g.addColorStop(1, 'rgba(5,13,26,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+  // connections
+  for (let i = 0; i < N; i++) {
+    for (let j = i + 1; j < N; j++) {
+      const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 130) {
+        ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y);
+        ctx.strokeStyle = `rgba(0,102,255,${(1 - d/130) * .13})`; ctx.lineWidth = .6; ctx.stroke();
+      }
+    }
+  }
+  // points + mouse interaction
+  pts.forEach(p => {
+    const mdx = mouseX - p.x, mdy = mouseY - p.y, md = Math.sqrt(mdx*mdx + mdy*mdy);
+    if (md < 150) { p.vx -= mdx / md * .015; p.vy -= mdy / md * .015; }
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0 || p.x > W) p.vx *= -1;
+    if (p.y < 0 || p.y > H) p.vy *= -1;
+    p.vx = Math.max(-1.2, Math.min(1.2, p.vx)); p.vy = Math.max(-1.2, Math.min(1.2, p.vy));
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(${p.col},${p.op})`; ctx.fill();
+  });
+  requestAnimationFrame(frame);
+}
+frame();
+
+/* ===== HERO PARALLAX ===== */
+const heroInner = document.querySelector('.hero-inner');
+let ticking = false;
+window.addEventListener('scroll', () => {
+  if (!ticking) {
+    requestAnimationFrame(() => {
+      const sy = window.scrollY;
+      if (sy < H) {
+        heroInner.style.transform = `translateY(${sy * .28}px)`;
+        heroInner.style.opacity = 1 - sy / 700;
+      }
+      ticking = false;
+    });
+    ticking = true;
+  }
+});
+
+/* ===== COUNTERS ===== */
+function animCount(el) {
+  const t = parseFloat(el.dataset.cnt), dec = parseInt(el.dataset.dec);
+  const dur = 2200, s = Date.now();
+  const run = () => {
+    const p = Math.min((Date.now()-s)/dur, 1);
+    const e = 1 - Math.pow(1-p, 3);
+    el.textContent = (t*e).toFixed(dec);
+    if (p < 1) requestAnimationFrame(run);
+  };
+  run();
+}
+const cntObs = new IntersectionObserver(entries => {
+  entries.forEach(en => { if (en.isIntersecting) { en.target.querySelectorAll('[data-cnt]').forEach(animCount); cntObs.unobserve(en.target); }});
+}, {threshold: .5});
+document.querySelectorAll('.hero-stats').forEach(el => cntObs.observe(el));
+
+/* ===== INTERSECTION OBSERVER ===== */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach((en, i) => {
+    if (en.isIntersecting) {
+      en.target.style.animationDelay = (en.target.dataset.delay || 0) + 'ms';
+      en.target.classList.add('vis');
+      // bars
+      en.target.querySelectorAll('.bfill,.prbar-fill').forEach(b => {
+        setTimeout(() => { b.style.width = b.dataset.w || b.style.width; }, 320);
+      });
+    }
+  });
+}, {threshold: .12});
+
+document.querySelectorAll('.pcard,.scard,.fstep,.tc,.ac,.bcard,.prc').forEach((el, i) => {
+  el.dataset.delay = (i % 4) * 70;
+  obs.observe(el);
+});
+
+/* ===== DQI RING ===== */
+const ringObs = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (en.isIntersecting) {
+      const circ = 2 * Math.PI * 60;
+      const offset = circ * (1 - 71/100);
+      document.getElementById('rfill').style.strokeDashoffset = offset;
+      ringObs.unobserve(en.target);
+    }
+  });
+}, {threshold: .3});
+const ringEl = document.getElementById('rep');
+if (ringEl) ringObs.observe(ringEl);
+
+/* ===== 3D TILT ===== */
+document.querySelectorAll('.scard,.tc,.ac,.pcard').forEach(el => {
+  el.addEventListener('mousemove', e => {
+    const r = el.getBoundingClientRect();
+    const cx = r.width/2, cy = r.height/2;
+    const rx = (e.clientY - r.top - cy) / 14;
+    const ry = (cx - (e.clientX - r.left)) / 14;
+    el.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-5px)`;
+  });
+  el.addEventListener('mouseleave', () => {
+    el.style.transition = 'transform .5s ease';
+    el.style.transform = '';
+    setTimeout(() => { el.style.transition = ''; }, 500);
+  });
+  el.addEventListener('mouseenter', () => { el.style.transition = 'transform .12s ease'; });
+});
+
+/* ===== FAQ ===== */
+const faqData = [
+  {q:"Что такое DQI?",a:"Digital Quality Index (DQI) — это AI-индекс, который оценивает не количество, а качество времени, проведённого в смартфоне. Он анализирует ваши активности и формирует персональный индекс цифрового развития."},
+  {q:"Как приложение узнаёт, что я делаю в телефоне?",a:"Вы сами логируете активности через простой интерфейс или подключаете интеграции с образовательными приложениями (Duolingo, Coursera, YouTube). Никакой слежки — только то, что вы разрешаете."},
+  {q:"Для кого подходит DQI?",a:"DQI для всех: подростки (14–18), студенты, молодые специалисты и родители, которые хотят развивать цифровую культуру детей. Особенно актуален для студентов университетов Узбекистана и Центральной Азии."},
+  {q:"Приложение бесплатное?",a:"Базовая версия полностью бесплатна. Есть расширенный план с AI-рекомендациями, подробной аналитикой и специальными программами партнёрских университетов."},
+  {q:"Как университеты используют DQI?",a:"Университеты-партнёры интегрируют DQI в систему академических достижений. Студенты с высоким DQI получают приоритет при подаче на стипендии, стажировки, гранты и международные программы обмена."},
+  {q:"Что будет, если я провожу много времени в TikTok?",a:"DQI не запрещает развлечения. До 1 часа — без штрафов. 1–2 часа — минус 10 баллов. Это помогает осознать баланс без запретов."},
+  {q:"Как рассчитывается DQI Score?",a:"DQI = (сумма баллов за полезные активности - штрафы за излишества) / максимально возможные баллы × 100. Оценка обновляется ежедневно и показывает недельную тенденцию."},
+  {q:"Мои данные в безопасности?",a:"Абсолютно. Все данные хранятся на вашем устройстве (localStorage). Мы не продаём и не передаём личные данные третьим лицам. Только вы владеете своими данными."},
+  {q:"Работает ли приложение на Android и iOS?",a:"Да, DQI работает как PWA (Progressive Web App), которое устанавливается на любое устройство прямо из браузера — без App Store и Google Play. Нативные приложения находятся в разработке."},
+  {q:"Можно ли использовать DQI в школах?",a:"Да! У нас есть специальная School Edition с инструментами для учителей, классными активностями и интеграцией в учебный процесс. Напишите нам для подключения."},
+  {q:"Как установить приложение на iPhone?",a:"Откройте app.html в браузере Safari → нажмите кнопку «Поделиться» (квадрат со стрелкой) → выберите «На экран «Домой»» → нажмите «Добавить». Приложение появится как нативное."},
+  {q:"Как установить на Android?",a:"Откройте app.html в Chrome → нажмите на три точки меню → выберите «Добавить на главный экран» или «Установить приложение». Chrome покажет баннер установки автоматически."},
+];
+
+const faqWrap = document.getElementById('faqWrap');
+faqData.forEach((item, i) => {
+  const div = document.createElement('div');
+  div.className = 'faq-item';
+  div.innerHTML = `<button class="faq-q" onclick="toggleFaq(${i})"><span>${item.q}</span><div class="faq-ic" id="fic${i}">+</div></button><div class="faq-a" id="fa${i}"><div class="faq-ai">${item.a}</div></div>`;
+  faqWrap.appendChild(div);
+});
+
+function toggleFaq(i) {
+  const items = document.querySelectorAll('.faq-item');
+  const isOpen = items[i].classList.contains('open');
+  items.forEach((it, j) => { it.classList.remove('open'); document.getElementById('fa'+j).style.maxHeight = '0'; });
+  if (!isOpen) {
+    items[i].classList.add('open');
+    const ans = document.getElementById('fa'+i);
+    ans.style.maxHeight = ans.scrollHeight + 'px';
+  }
+}
+
+/* ===== PWA SW REGISTER ===== */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
